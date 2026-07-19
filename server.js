@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // ← ЭТО ВАЖНО!
 
 app.use(cors());
 app.use(express.json());
@@ -40,7 +40,7 @@ app.post('/api/save', (req, res) => {
     console.log(`🎯 Квест: ${data.quest}`);
     console.log(`📅 Дата: ${data.date}`);
     console.log(`⏰ Время: ${data.time}`);
-    console.log(`😊 Настроение: ${data.mood1}% → ${data.mood2}%`);
+    console.log(`😊 Настроение: ${data.mood}%`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     res.json({ success: true, message: 'Сова доставила письмо!' });
@@ -55,12 +55,16 @@ app.get('/api/answers', (req, res) => {
     }
 });
 
+// ===== ТЕСТОВЫЙ ЭНДПОИНТ (ПРОВЕРКА, ЧТО СЕРВЕР ЖИВ) =====
+app.get('/ping', (req, res) => {
+    res.send('pong');
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`
     ╔═══════════════════════════════════════╗
     ║   🦉 СОВА ЗАПУЩЕНА!                 ║
-    ║   Открывай: http://localhost:${PORT}   ║
-    ║   Или с телефона: http://192.168.3.19:${PORT} ║
+    ║   Порт: ${PORT}                        ║
     ╚═══════════════════════════════════════╝
     `);
 });
