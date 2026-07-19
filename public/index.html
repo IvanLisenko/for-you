@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Хватит грустить</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, #1a0a0a 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, #1a0a0a 0%, transparent 60%),
+                linear-gradient(180deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
+            font-family: 'Oswald', 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .wrapper {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 28px 18px;
+            border: 2px solid #3a2a1a;
+            box-shadow:
+                0 0 40px rgba(180, 80, 20, 0.1),
+                inset 0 0 60px rgba(180, 80, 20, 0.05);
+            position: relative;
+            z-index: 1;
+            transition: 0.5s;
+        }
+
+        .wrapper::after {
+            content: '⛓️';
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            font-size: 1.2rem;
+            opacity: 0.15;
+        }
+
+        /* ===== ГЛАВНАЯ ===== */
+        #mainPage {
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 2.4rem;
+            color: #c8b8a0;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-shadow: 0 0 30px rgba(180, 80, 20, 0.15);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .main-title span {
+            color: #d4875a;
+        }
+
+        .sub-message {
+            color: #8a7a6a;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .big-btn {
+            width: 100%;
+            padding: 22px 16px;
+            border: 2px solid #4a3a2a;
+            border-radius: 16px;
+            background: linear-gradient(180deg, #2a1a0a, #1a1008);
+            color: #d4875a;
+            font-size: 1.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .big-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(212, 135, 90, 0.05), transparent 70%);
+            animation: rotateGlow 15s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .big-btn:active {
+            transform: scale(0.94);
+        }
+
+        .big-btn .emoji {
+            display: inline-block;
+            animation: wiggle 1.5s infinite;
+        }
+
+        @keyframes wiggle {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(15deg);
+            }
+            75% {
+                transform: rotate(-15deg);
+            }
+        }
+
+        .funny-text {
+            margin-top: 12px;
+            color: #4a3a2a;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sparkles {
+            margin-top: 16px;
+            font-size: 1.6rem;
+            opacity: 0.2;
+            letter-spacing: 6px;
+        }
+
+        /* ===== ОПРОСНИК ===== */
+        .survey {
+            display: none;
+            animation: metalFade 0.6s ease;
+        }
+
+        .survey.open {
+            display: block;
+        }
+
+        @keyframes metalFade {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .step {
+            display: none;
+            animation: metalFade 0.4s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        h2 {
+            color: #c8b8a0;
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 span {
+            color: #d4875a;
+        }
+
+        .magic-text {
+            text-align: center;
+            color: #6a5a4a;
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        label {
+            color: #8a7a6a;
+            font-weight: 600;
+            display: block;
+            margin: 10px 0 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #2a1a0a;
+            background: rgba(0, 0, 0, 0.4);
+            color: #c8b8a0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+            font-family: 'Oswald', sans-serif;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #6a4a2a;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 30px rgba(180, 80, 20, 0.05);
+        }
+
+        input::placeholder {
+            color: #3a2a1a;
+        }
+
+        select option {
+            background: #0a0a0a;
+            color: #c8b8a0;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.6);
+            cursor: pointer;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, #2a1a0a, #6a4a2a);
+            border-radius: 4px;
+            padding: 0;
+            border: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #d4875a, #8a4a2a);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(180, 80, 20, 0.2);
+            border: 1px solid #4a3a2a;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #d4875a, #8a4a2a);
+            cursor: pointer;
+            border: 1px solid #4a3a2a;
+        }
+
+        .range-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d4875a;
+            min-width: 55px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(180, 80, 20, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #3a2a1a;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #1a1008, #0a0a0a);
+            color: #d4875a;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: 0.3s;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #1a1008;
+            color: #4a3a2a;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .back-btn:hover {
+            border-color: #3a2a1a;
+            color: #6a5a4a;
+        }
+
+        /* ===== ОШИБКИ ===== */
+        .error-msg {
+            color: #d4875a;
+            background: rgba(212, 135, 90, 0.08);
+            border: 1px solid rgba(212, 135, 90, 0.2);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: none;
+            animation: metalFade 0.3s ease;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        /* ===== КОТИК ===== */
+        .cat-box {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 18px;
+            padding: 18px 14px;
+            border: 2px solid #2a1a0a;
+            margin: 12px 0;
+        }
+
+        .cat-box img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2a1a0a;
+        }
+
+        .cat-box p {
+            color: #8a7a6a;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== ПИСЬМО ===== */
+        .letter {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 18px;
+            padding: 18px;
+            border: 2px solid #2a1a0a;
+            text-align: center;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(212, 135, 90, 0.03), transparent 70%);
+            animation: rotateGlow 20s linear infinite;
+        }
+
+        .letter .stamp {
+            font-size: 2.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .letter h3 {
+            color: #d4875a;
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .letter p {
+            color: #8a7a6a;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 6px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .letter .highlight {
+            color: #d4875a;
+            font-weight: 700;
+        }
+
+        .owl-big {
+            font-size: 3.6rem;
+            animation: float 2s infinite alternate;
+            text-align: center;
+            display: block;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(-3deg);
+            }
+            100% {
+                transform: translateY(-10px) rotate(3deg);
+            }
+        }
+
+        /* ===== ВЫБОР КВЕСТА (5 штук с картинками) ===== */
+        .quest-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .quest-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            padding: 10px;
+            border: 2px solid #1a1008;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .quest-card:active {
+            transform: scale(0.97);
+        }
+
+        .quest-card.selected {
+            border-color: #d4875a;
+            background: rgba(212, 135, 90, 0.05);
+            box-shadow: 0 0 40px rgba(180, 80, 20, 0.05);
+        }
+
+        .quest-card.selected::after {
+            content: '⛓️';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 1.2rem;
+            opacity: 0.6;
+        }
+
+        .quest-card img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin-bottom: 6px;
+            border: 1px solid #1a1008;
+        }
+
+        .quest-card .quest-title {
+            color: #c8b8a0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quest-card .quest-desc {
+            color: #6a5a4a;
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== ФИНАЛ ===== */
+        .success-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #2a1a0a;
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .success-box .big-emoji {
+            font-size: 3.6rem;
+        }
+
+        .success-box p {
+            color: #8a7a6a;
+            font-size: 0.95rem;
+            margin: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .success-box .sub {
+            color: #4a3a2a;
+            font-size: 0.75rem;
+        }
+
+        /* ===== МУЗЫКАЛЬНЫЙ ПЛЕЕР ===== */
+        .music-player {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 8px 14px;
+            border: 1px solid #2a1a0a;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6a5a4a;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .music-player:active {
+            transform: scale(0.95);
+        }
+
+        .music-player .icon {
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: #1a1008;
+            font-size: 0.55rem;
+            margin-top: 18px;
+            letter-spacing: 2px;
+        }
+
+        input[type="date"] {
+            color-scheme: dark;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper" id="app">
+
+        <!-- ===== ГЛАВНАЯ ===== -->
+        <div id="mainPage">
+            <div class="main-title">
+                Привет <span></span>
+            </div>
+            <div class="sub-message">
+                ⛓️ Ты готова к приключению? ⛓️
+            </div>
+            <button class="big-btn" onclick="openSurvey()">
+                <span class="emoji">⛓️</span> Нажми
+            </button>
+            
+            <div class="sparkles">
+                🦉 ⛓️ 🎸
+            </div>
+        </div>
+
+        <!-- ===== ОПРОСНИК ===== -->
+        <div class="survey" id="surveyContainer">
+
+            <!-- ШАГ 1: Опрос -->
+            <div class="step active" id="step1">
+                <button class="back-btn" onclick="goBack()">← На главную</button>
+                <h2>📜 <span>Опрос</span></h2>
+                <div class="magic-text">Сова уже летит... 🦉</div>
+
+                <label>🧙 Твоё имя:</label>
+                <input type="text" id="name" placeholder="Например: Глэм..." />
+
+                <label>🍕 Любимая еда:</label>
+                <input type="text" id="food" placeholder="Пицца, бургеры..." />
+
+                <label>🍷 Любимый напиток:</label>
+                <input type="text" id="drink" placeholder="Виски, кола..." />
+
+                <label>🐾 Кличка питомца:</label>
+                <input type="text" id="pet" placeholder="Рокки, Блэк..." />
+
+                <div class="error-msg" id="errorStep1">⛓️ Заполни все поля, сова ждёт!</div>
+
+                <button class="btn" onclick="validateStep1()">📨 Отправить →</button>
+            </div>
+
+            <!-- ШАГ 2: Настроение -->
+            <div class="step" id="step2">
+                <h2>🌤 <span>Настроение?</span></h2>
+                <div class="magic-text">Сова проверит 🧐</div>
+
+                <label>Уровень счастья сегодня:</label>
+                <div class="range-container">
+                    <span style="color:#3a2a1a;font-size:1.2rem;">😔</span>
+                    <input type="range" id="mood" min="0" max="100" value="50" />
+                    <span style="color:#d4875a;font-size:1.2rem;">😍</span>
+                </div>
+                <div style="text-align:center;font-size:2.2rem;font-weight:700;color:#d4875a;" id="mood_val">50%</div>
+
+                <button class="btn" onclick="checkMood()">🎸 Проверить</button>
+            </div>
+
+            <!-- ШАГ 3: Котик -->
+            <div class="step" id="step3">
+                <h2>😿 <span>Ой-ой...</span></h2>
+                <div class="cat-box">
+                    <img src="/images/cat.jpg" alt="милый котик" id="catImage" onerror="this.src='https://cataas.com/cat?t=${Date.now()}'" />
+                    <p>🐱 Вот тебе Бусинка!<br>Погладь её и попробуй снова 🤘</p>
+                </div>
+                <button class="btn" onclick="goToStep(2)">🔄 Попробовать снова</button>
+            </div>
+
+            <!-- ШАГ 4: Письмо -->
+            <div class="step" id="step4">
+                <span class="owl-big">🦉</span>
+                <h2>📬 <span>Письмо</span></h2>
+                <div class="letter">
+                    <div class="stamp">✉️</div>
+                    <h3>Дорогая <span id="letter_name">...</span>!</h3>
+                    <p>
+                        🎸 Я приглашаю тебя на <span class="highlight">РОК-КВЕСТ</span>!<br><br>
+                        Будем пить <span id="letter_drink" class="highlight">...</span><br>
+                        и есть <span id="letter_food" class="highlight">...</span> 🍕<br><br>
+                        Твой питомец <span id="letter_pet" class="highlight">...</span> тоже с нами! 🐾
+                    </p>
+                    <p style="color:#6a5a4a;font-size:0.7rem;opacity:0.8;">⛓️ Выбери квест ⛓️</p>
+                </div>
+
+                <button class="btn" onclick="goToStep(5)">🎯 Выбрать квест</button>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- ШАГ 5: ВЫБОР КВЕСТА (5 штук С КАРТИНКАМИ) -->
+            <!-- ============================================================ -->
+            <div class="step" id="step5">
+                <h2>🗺 <span>Выбери квест</span></h2>
+                <div class="magic-text">⛓️ Каждый — своя легенда ⛓️</div>
+
+                <div class="quest-grid" id="questGrid">
+                    <!-- Квест 1: Шерлок -->
+                    <div class="quest-card" data-quest="1" onclick="selectQuest(1)">
+                        <img src="/images/quest1.png" alt="Шерлок" id="questImg1" onerror="this.src='https://via.placeholder.com/400x200/1a1008/d4875a?text=Шерлок'" />
+                        <div class="quest-title">🔍 Шерлок</div>
+                     
+                    </div>
+
+                    <!-- Квест 2: Зазеркалье -->
+                    <div class="quest-card" data-quest="2" onclick="selectQuest(2)">
+                        <img src="/images/quest2.png" alt="Зазеркалье" id="questImg2" onerror="this.src='https://via.placeholder.com/400x200/1a1008/d4875a?text=Зазеркалье'" />
+                        <div class="quest-title">🪞 Зазеркалье</div>
+               
+                    </div>
+
+                    <!-- Квест 3: Дэвид Джонс -->
+                    <div class="quest-card" data-quest="3" onclick="selectQuest(3)">
+                        <img src="/images/quest3.png" alt="Дэвид Джонс" id="questImg3" onerror="this.src='https://via.placeholder.com/400x200/1a1008/d4875a?text=Дэвид+Джонс'" />
+                        <div class="quest-title">⚓ В плену Дэвида Джонса</div>
+                       
+                    </div>
+
+                    <!-- Квест 4: Фараоны -->
+                    <div class="quest-card" data-quest="4" onclick="selectQuest(4)">
+                        <img src="/images/quest4.png" alt="Фараоны" id="questImg4" onerror="this.src='https://via.placeholder.com/400x200/1a1008/d4875a?text=Фараоны'" />
+                        <div class="quest-title">🏛️ Тайна фараонов</div>
+                        
+                    </div>
+
+                    <!-- Квест 5: Гарри -->
+                    <div class="quest-card" data-quest="5" onclick="selectQuest(5)">
+                        <img src="/images/quest5.png" alt="Гарри" id="questImg5" onerror="this.src='https://via.placeholder.com/400x200/1a1008/d4875a?text=Гарри'" />
+                        <div class="quest-title">⚡ Тайна Гарри</div>
+                     
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;text-align:center;color:#4a3a2a;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;" id="selectedQuestText">
+                    👆 Нажми на карточку
+                </div>
+
+                <div class="error-msg" id="errorQuest">⛓️ Выбери квест!</div>
+
+                <button class="btn" id="continueBtn" onclick="confirmQuest()" disabled style="opacity:0.3;">
+                    📅 Выбрать дату
+                </button>
+            </div>
+
+            <!-- ШАГ 6: ДАТА (без времени) -->
+            <div class="step" id="step6">
+                <h2>📅 <span>Когда?</span></h2>
+                <div class="magic-text">Сова ждёт 🦉</div>
+
+                <label>📅 Удобный день:</label>
+                <input type="date" id="date" />
+
+                <div style="margin-top:8px;text-align:center;color:#6a5a4a;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">
+                    ⏰ Время подберём по записям 😉
+                </div>
+
+                <div class="error-msg" id="errorDateTime">⛓️ Выбери дату!</div>
+
+                <button class="btn" onclick="validateDateTime()">🕊 Отправить сове</button>
+            </div>
+
+            <!-- ШАГ 7: ФИНАЛ -->
+            <div class="step" id="step7">
+                <h2>🎉 <span>ГОТОВО!</span></h2>
+                <div class="success-box">
+                    <div class="big-emoji">🦉⛓️</div>
+                    <p style="font-size:1.2rem;font-weight:700;">Сова улетела!</p>
+                    <p>Я напишу тебе ❤️</p>
+         
+                </div>
+                <button class="btn" onclick="resetAll()" style="background:rgba(0,0,0,0.2);color:#4a3a2a;border-color:#1a1008;box-shadow:none;margin-top:10px;">
+                    🔄 Заново
+                </button>
+            </div>
+
+   
+        </div>
+
+    </div>
+
+    <!-- ===== МУЗЫКАЛЬНЫЙ ПЛЕЕР ===== -->
+    <div class="music-player" id="musicPlayer" onclick="toggleMusic()">
+        <span class="icon" id="musicIcon">🔊</span>
+        <span id="musicLabel">Играет</span>
+        <span class="status">🎸</span>
+    </div>
+
+        <script>
+        // ================================================================
+        // 1. МУЗЫКА — ИГРАЕТ СРАЗУ ПРИ ЗАХОДЕ (или по клику)
+        // ================================================================
+        const MUSIC_MAIN = '/music/main.mp3';
+        const MUSIC_FINAL = '/music/final.mp3';
+
+        let audio = null;
+        let isMusicPlaying = false; // по умолчанию выключена, пока не включится
+        let currentTrack = 'main';
+        let musicStarted = false;
+
+        function initMusic() {
+            if (!audio) {
+                audio = new Audio(MUSIC_MAIN);
+                audio.loop = true;
+                audio.volume = 0.25;
+                audio.preload = 'auto';
+            }
+        }
+
+        // Пытаемся включить музыку (вызывается при клике)
+        function startMusic() {
+            if (musicStarted) return;
+            
+            initMusic();
+            audio.play()
+                .then(() => {
+                    isMusicPlaying = true;
+                    musicStarted = true;
+                    updateMusicUI();
+                    console.log('🎵 Музыка включена!');
+                })
+                .catch((e) => {
+                    console.warn('🎵 Автовоспроизведение заблокировано, ждём клика:', e);
+                    // Показываем кнопку "Включить музыку" на главной
+                    document.getElementById('musicLabel').textContent = 'Нажми';
+                    document.getElementById('musicIcon').textContent = '🔇';
+                    isMusicPlaying = false;
+                });
+        }
+
+        // Пробуем включить при загрузке (если разрешено)
+        window.addEventListener('DOMContentLoaded', () => {
+            initMusic();
+            
+            // Устанавливаем сегодняшнюю дату
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('date').value = `${year}-${month}-${day}`;
+
+            // Пытаемся включить музыку сразу
+            setTimeout(() => {
+                startMusic();
+            }, 300);
+        });
+
+        // При клике на любую кнопку — включаем музыку если ещё не включена
+        document.addEventListener('click', function() {
+            if (!musicStarted) {
+                startMusic();
+            }
+        }, { once: false });
+
+        function toggleMusic() {
+            if (!audio) {
+                initMusic();
+            }
+            
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+            } else {
+                audio.play()
+                    .then(() => {
+                        isMusicPlaying = true;
+                        musicStarted = true;
+                        updateMusicUI();
+                    })
+                    .catch((e) => {
+                        console.warn('Не удалось включить:', e);
+                    });
+            }
+            updateMusicUI();
+        }
+
+        function updateMusicUI() {
+            const icon = document.getElementById('musicIcon');
+            const label = document.getElementById('musicLabel');
+            if (isMusicPlaying) {
+                icon.textContent = '🔊';
+                label.textContent = 'Играет';
+            } else {
+                icon.textContent = '🔇';
+                label.textContent = musicStarted ? 'Выкл' : 'Нажми';
+            }
+        }
+
+        function switchToFinalMusic() {
+            if (audio) {
+                audio.pause();
+                audio.src = MUSIC_FINAL;
+                audio.loop = true;
+                audio.volume = 0.3;
+                audio.play()
+                    .then(() => {
+                        isMusicPlaying = true;
+                        musicStarted = true;
+                        updateMusicUI();
+                    })
+                    .catch(() => {
+                        console.warn('🎵 Финальная музыка не загрузилась');
+                    });
+                currentTrack = 'final';
+            }
+        }
+
+        // ================================================================
+        // 2. НАВИГАЦИЯ
+        // ================================================================
+        let userData = {};
+        let selectedQuest = null;
+
+        function openSurvey() {
+            // При клике на главную кнопку — включаем музыку
+            startMusic();
+            
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('surveyContainer').classList.add('open');
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+
+            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('surveyContainer').classList.remove('open');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToStep(n) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+
+            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ================================================================
+        // 3. ВАЛИДАЦИЯ ШАГА 1
+        // ================================================================
+        function validateStep1() {
+            const name = document.getElementById('name').value.trim();
+            const food = document.getElementById('food').value.trim();
+            const drink = document.getElementById('drink').value.trim();
+            const pet = document.getElementById('pet').value.trim();
+
+            if (!name || !food || !drink || !pet) {
+                document.getElementById('errorStep1').classList.add('show');
+                return;
+            }
+
+            userData.name = name;
+            userData.food = food;
+            userData.drink = drink;
+            userData.pet = pet;
+
+            goToStep(2);
+        }
+
+        // ================================================================
+        // 4. ШКАЛА НАСТРОЕНИЯ
+        // ================================================================
+        document.getElementById('mood').addEventListener('input', function() {
+            document.getElementById('mood_val').textContent = this.value + '%';
+        });
+
+        function checkMood() {
+            const val = parseInt(document.getElementById('mood').value);
+            userData.mood = val;
+
+            if (val < 60) {
+                goToStep(3);
+            } else {
+                document.getElementById('letter_name').textContent = userData.name;
+                document.getElementById('letter_drink').textContent = userData.drink;
+                document.getElementById('letter_food').textContent = userData.food;
+                document.getElementById('letter_pet').textContent = userData.pet;
+
+                goToStep(4);
+            }
+        }
+
+        // ================================================================
+        // 5. ВЫБОР КВЕСТА
+        // ================================================================
+        function selectQuest(id) {
+            selectedQuest = id;
+
+            document.querySelectorAll('.quest-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            document.querySelector(`.quest-card[data-quest="${id}"]`).classList.add('selected');
+
+            const btn = document.getElementById('continueBtn');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+
+            const questNames = {
+                1: 'Шерлок',
+                2: 'Зазеркалье',
+                3: 'Дэвид Джонс',
+                4: 'Фараоны',
+                5: 'Гарри'
+            };
+            document.getElementById('selectedQuestText').textContent = `✅ Выбран квест: ${questNames[id]}`;
+
+            document.getElementById('errorQuest').classList.remove('show');
+        }
+
+        function confirmQuest() {
+            if (!selectedQuest) {
+                document.getElementById('errorQuest').classList.add('show');
+                return;
+            }
+            userData.quest = selectedQuest;
+            goToStep(6);
+        }
+
+        // ================================================================
+        // 6. ДАТА
+        // ================================================================
+        function validateDateTime() {
+            const date = document.getElementById('date').value;
+
+            if (!date) {
+                document.getElementById('errorDateTime').classList.add('show');
+                return;
+            }
+
+            userData.date = date;
+            userData.time = 'подберём по записям';
+
+            sendFinal();
+        }
+
+        // ================================================================
+        // 7. ОТПРАВКА + ФИНАЛ
+        // ================================================================
+        function sendFinal() {
+            const fullData = {
+                name: userData.name,
+                food: userData.food,
+                drink: userData.drink,
+                pet: userData.pet,
+                quest: userData.quest,
+                date: userData.date,
+                time: userData.time,
+                mood: userData.mood
+            };
+
+            console.log('📩 Отправляю данные:', fullData);
+
+            fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fullData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('✅ Ответ сохранён:', data);
+                    switchToFinalMusic();
+                    goToStep(7);
+                })
+                .catch(err => {
+                    console.error('❌ Ошибка:', err);
+                    localStorage.setItem('lastInvite', JSON.stringify(fullData));
+                    switchToFinalMusic();
+                    goToStep(7);
+                });
+        }
+
+        // ================================================================
+        // 8. СБРОС
+        // ================================================================
+        function resetAll() {
+            if (audio) {
+                audio.pause();
+                audio.src = MUSIC_MAIN;
+                audio.loop = true;
+                audio.volume = 0.25;
+                audio.play()
+                    .then(() => {
+                        isMusicPlaying = true;
+                        musicStarted = true;
+                        updateMusicUI();
+                    })
+                    .catch(() => {});
+                currentTrack = 'main';
+            }
+
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('surveyContainer').classList.remove('open');
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            document.getElementById('name').value = '';
+            document.getElementById('food').value = '';
+            document.getElementById('drink').value = '';
+            document.getElementById('pet').value = '';
+            document.getElementById('date').value = '';
+            document.getElementById('mood').value = 50;
+            document.getElementById('mood_val').textContent = '50%';
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('date').value = `${year}-${month}-${day}`;
+
+            selectedQuest = null;
+            document.querySelectorAll('.quest-card').forEach(el => el.classList.remove('selected'));
+            document.getElementById('continueBtn').disabled = true;
+            document.getElementById('continueBtn').style.opacity = '0.3';
+            document.getElementById('selectedQuestText').textContent = '👆 Нажми на карточку';
+
+            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+        }
+    </script>
+
+</body>
+</html>
