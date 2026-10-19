@@ -1,13 +1,17 @@
 {
-  "name": "magic-invite",
+  "name": "autumn-fairytale",
   "version": "1.0.0",
-  "description": "Приглашение на свидание с магией",
+  "private": true,
+  "description": "Романтический интерактивный сайт «Осенняя сказка для тебя»",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "express": "^4.21.2"
   }
 }
